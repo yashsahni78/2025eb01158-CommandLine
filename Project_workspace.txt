@@ -1,0 +1,70 @@
+======================================================================
+                     PROJECT WORKSPACE REPORT
+======================================================================
+
+1. DIRECTORY STRUCTURE CREATED
+----------------------------------------------------------------------
+The project workspace was established under the /opt directory to ensure 
+isolation from standard user home directories.
+
+Structure:
+/opt/project_workspace/
+├── docs/       (For project documentation and text files)
+└── src/        (For source code and project assets)
+
+
+2. UMASK VALUE USED
+----------------------------------------------------------------------
+System Default Umask: 0022
+
+Explanation: The default umask of 0022 means that by default, newly 
+created directories get 755 permissions (rwxr-xr-x) and files get 
+644 permissions (rw-r--r--). This allows unprivileged "other" users 
+to read project data, which fails our security requirement. Therefore, 
+explicit permission modification was required.
+
+
+3. FILE PERMISSIONS & OWNERSHIP DETAILS
+----------------------------------------------------------------------
+Target Directory: /opt/project_workspace
+
+[A] BEFORE MODIFICATION:
+----------------------------------------------------------------------
+Permissions (Octal): 755
+Permissions (String): drwxr-xr-x
+Owner:                root
+Group:                root
+
+Observation: Any user on the system could navigate into the directory 
+and read the project files.
+
+
+[B] AFTER MODIFICATION:
+----------------------------------------------------------------------
+Permissions (Octal): 2770
+Permissions (String): drwxrws---
+Owner:                root
+Group:                project_team
+
+Observation: The "other" category has zero permissions (---), completely 
+locking out non-team members. The "s" in the group section indicates 
+the SetGID bit is active.
+
+
+4. EXPLANATION OF HOW PERMISSIONS PROTECT PROJECT DATA
+----------------------------------------------------------------------
+* Confidentiality (No Other Access): By stripping all permissions from 
+  the "Others" class (---), users who are not explicitly added to the 
+  'project_team' group cannot view, modify, or list the files within 
+  the workspace.
+  
+* Collaboration (Group Read/Write): Setting the group permission to 
+  rwx (7) allows all vetted members of 'project_team' to seamlessly 
+  create, modify, and delete files within the workspace.
+
+* Integrity via SetGID (2770): The SetGID bit (represented by the 's' 
+  in drwxrws---) ensures that any new file or subdirectory created 
+  inside the workspace automatically inherits 'project_team' as its 
+  owning group, regardless of the creator's primary group. This 
+  prevents file access fragmentation when multiple users collaborate.
+======================================================================
