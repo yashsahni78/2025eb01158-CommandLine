@@ -1,0 +1,75 @@
+======================================================================
+                      LINUX LINK ANALYSIS REPORT
+======================================================================
+
+1. EXPERIMENT SETUP & INODE NUMBERS
+----------------------------------------------------------------------
+Using the 'ls -li' command, the following inode numbers and file 
+metadata were recorded initially:
+
+3647280 -rwxrwxrwx 2 yashsahni2025eb01158 yashsahni2025eb01158  6 Jul  3 14:28 hardlink.txt
+22799473113647280 -rwxrwxrwx 2 yashsahni2025eb01158 yashsahni2025eb01158  6 Jul  3 14:28 original.txt
+51509920738136585 lrwxrwxrwx 1 yashsahni2025eb01158 yashsahni2025eb01158 12 Jul  3 14:28 sym_link.txt -> original.txt
+Observation: The original file and the hard link share the exact same 
+inode number. The symbolic link has its own unique inode number.
+
+
+2. METADATA COMPARISON (USING UTILITIES)
+----------------------------------------------------------------------
+Using the 'stat' utility, the following structural characteristics 
+were observed:
+
+* Hard Link: 
+  Shares permissions, ownership, timestamps, and data blocks with 
+  original.txt. The "Links" count on the filesystem incremented from 
+  1 to 2 when created.
+
+* Symbolic Link:
+  Has its own distinct size (equal to the number of characters in the 
+  string "original.txt"). Its file type is explicitly listed as a 
+  "symbolic link" (l), and its permissions point only to the shortcut 
+  itself, not the underlying data.
+
+
+3. EFFECT OF DELETING THE ORIGINAL FILE
+----------------------------------------------------------------------
+After running 'rm original.txt', the following behavior occurred:
+
+* hard_link.txt: 
+  STILL FUNCTIONAL. Running 'cat hard_link.txt' successfully printed 
+  the original file contents. The file's link count dropped back to 1.
+
+* sym_link.txt: 
+  BROKEN/DANGLING LINK. Running 'cat sym_link.txt' resulted in a 
+  "No such file or directory" error. In the terminal, the file name 
+  typically flashes red to indicate it points to a non-existent path.
+
+
+4. COMPARISON SUMMARY
+----------------------------------------------------------------------
+Feature             | Hard Link                  | Symbolic Link
+----------------------------------------------------------------------
+Inode Number        | Same as original           | Unique / Different
+File Size           | Same as original           | Size of the path string
+Cross-Filesystem    | No (restricted to same OS) | Yes (can cross drives)
+Directories Allowed | No                         | Yes
+After Source Delete | Remains fully intact       | Becomes broken/dangling
+
+
+5. CONCLUSIONS & FINDINGS
+----------------------------------------------------------------------
+* Hard Links are Directory Entries: A hard link is not a copy; it is 
+  simply an additional name pointing directly to the exact underlying 
+  data blocks on the disk. Deleting the "original" file simply removes 
+  one pointer. The data is only erased when the link count reaches 0.
+
+* Symbolic Links are Shortcuts: A symlink behaves like a Windows 
+  shortcut. It contains nothing but a text path pointing to the 
+  original filename. If the original file name is deleted or moved, 
+  the symlink completely breaks because its destination no longer exists.
+
+* Recovery Lesson for Developers: If a developer accidentally deletes a 
+  file but a hard link exists elsewhere on the system, no data is lost. 
+  If only a symbolic link exists, the data is gone and must be 
+  recovered from backups.
+======================================================================
