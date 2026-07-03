@@ -1,0 +1,66 @@
+========================================================================
+                     LINUX ENVIRONMENT VERIFICATION REPORT
+========================================================================
+Date: 2026-07-03
+Role: Linux Support Engineer
+Status: Onboarding Verification
+
+------------------------------------------------------------------------
+1. USERNAME AND GROUPS
+------------------------------------------------------------------------
+Command: whoami; groups
+Output:
+yashsahni2025eb01158
+adm dialout cdrom floppy sudo audio dip video plugdev users netdev
+Observations:
+The 'whoami' command outputs the exact string of the current active 
+session username. The 'groups' command lists all security and system 
+administration groups assigned to this specific user profile, which 
+confirms whether the account possesses administrative execution rights.
+
+------------------------------------------------------------------------
+2. CURRENT SHELL
+------------------------------------------------------------------------
+Command: echo $SHELL
+Output:
+/bin/bash
+Observations:
+This command reads the $SHELL environment variable to identify the active 
+command-line interpreter interface. Verifying the active shell ensures 
+compatibility with standard system administration automation scripts and 
+environment profiles.
+
+------------------------------------------------------------------------
+3. CURRENT WORKING DIRECTORY
+------------------------------------------------------------------------
+Command: pwd
+Output:
+/mnt/c/Users/sahni/env_report.txt
+Observations:
+The 'pwd' (Print Working Directory) command returns the fully qualified, 
+absolute directory path currently being accessed by the user. This establishes 
+a reliable baseline reference point prior to running relative file operations.
+
+------------------------------------------------------------------------
+4. WORKSPACE FILES AND DIRECTORIES
+------------------------------------------------------------------------
+Command: ls -la
+Output:
+-rwxrwxrwx 1 yashsahni2025eb01158 yashsahni2025eb01158    0 Jul  3 08:42 env_report.txt
+Observations:
+The 'ls -la' command lists all files and subdirectories located within the 
+present folder structure, including hidden system files (prefixed with a dot). 
+It also outputs file permissions, owners, and sizes to allow security Auditing.
+
+------------------------------------------------------------------------
+5. NETWORK CONNECTIVITY VERIFICATION
+------------------------------------------------------------------------
+Command: ping -c 3 8.8.8.8
+Output:
+PING 3.8.8.8 (3.8.8.8) 56(84) bytes of data.
+Observations:
+The 'ping' command transmits ICMP Echo Request packets to a highly reliable, 
+external public IP address to test networking capabilities. Achieving a 
+0% packet loss result successfully proves that local routing, interfaces, 
+and network equipment are operational.
+========================================================================
